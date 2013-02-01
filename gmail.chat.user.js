@@ -1,4 +1,5 @@
 gTable = null;
+chatSearchBox = document.querySelector('div[role="complementary"] input[type="text"][aria-haspopup]');
 
 function getContactsTable() {
     var tables = document.getElementsByTagName('table');
@@ -17,7 +18,7 @@ function getContactsTable() {
 function modified(node) {
     gTable.removeEventListener("DOMSubtreeModified", modified, false);
 
-    console.log('modified');
+   // console.log('modified');
     var crows = gTable.getElementsByTagName('tr');
     for (var i = 0; i < crows.length; i++) {
         var img = crows[i].getElementsByTagName('img');
@@ -29,61 +30,50 @@ function modified(node) {
                 console.log("CHAT - clicked on", this.getElementsByClassName('az1')[0].innerHTML);
                 openOfflineChat(this.querySelector(".az1").innerHTML);
             };
-            console.log('adding offline chat for ' + i);
+            //console.log('adding offline chat for ' + i);
         } else {
             // nothing
         }
     }
-    console.log('end modified');
+    //console.log('end modified');
 
     gTable.addEventListener("DOMSubtreeModified", modified, false);
 }
-var self = this;
-var chatSearch = document.querySelector('div[role="complementary"] input[type="text"][aria-haspopup]');
 
-var openOfflineChat = function(name) {
-        var evt_click = document.createEvent("MouseEvents");
-        evt_click.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        var evt_focus = document.createEvent("MouseEvents");
-        evt_focus.initMouseEvent("focus", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        var evt_mouseover = document.createEvent("MouseEvents");
-        evt_mouseover.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+function openOfflineChat(name) {
+    var evt_click = document.createEvent("MouseEvents");
+    evt_click.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    var evt_focus = document.createEvent("MouseEvents");
+    evt_focus.initMouseEvent("focus", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    var evt_mouseover = document.createEvent("MouseEvents");
+    evt_mouseover.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 
-        var putText = function(name) {
+    var putText = function(name) {
 
-                chatSearch.value = "";
-                chatSearch.dispatchEvent(evt_focus);
-                chatSearch.value = name;
-            };
+            chatSearchBox.value = "";
+            chatSearchBox.dispatchEvent(evt_focus);
+            chatSearchBox.value = name;
+        };
 
-        var clickOnChat = function() {
-                // console.log("removing fields");
-                // $('div[role="listbox"] div').remove();
-                // $('div[role="listbox"] div div div').remove();
-                var options = document.querySelectorAll('div[role="listbox"] div div div.uX');
-                for (i = 0; i < options.length; i++) {
-                    if (options[i].innerHTML === "Send offline chat") {
-                        console.log("clicking on the chat icon");
-                        options[i].dispatchEvent(evt_mouseover);
-                        options[i].dispatchEvent(evt_click);
-                        options[i].style.zIndex = 0;
-                        break;
-                    }
+    var clickOnChat = function() {
+            var options = document.querySelectorAll('div[role="listbox"] div div div.uX');
+            for (i = 0; i < options.length; i++) {
+                if (options[i].innerHTML === "Send offline chat") {
+                    console.log("clicking on the chat icon");
+                    options[i].dispatchEvent(evt_mouseover);
+                    options[i].dispatchEvent(evt_click);             
+                    break;
                 }
-                chatSearch.value = "";
-                $('div[role="listbox"]').style.zIndex = 0;
+            }
+            chatSearchBox.value = "";
+            $('div[role="listbox"]').style.zIndex = 0;
+        };
 
-                // console.log("clicking on chat icon");
-                // $('div[role="listbox"] div div div').dispatchEvent(evt_mouseover);
-                // $('div[role="listbox"] div div div').dispatchEvent(evt_click);
-                // $('div[role="listbox"]').style.zIndex=0;
-            };
+    putText(name);
+    $('div[role="listbox"]').style.zIndex = -100;
+    setTimeout(clickOnChat, 500);
 
-        putText(name);
-        $('div[role="listbox"]').style.zIndex = -100;
-        setTimeout(clickOnChat, 500);
-
-    };
+}
 
 function load() {
     if (getContactsTable() === gTable) return;

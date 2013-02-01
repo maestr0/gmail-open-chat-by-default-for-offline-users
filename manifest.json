@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "GMail - Open CHAT by default for offline users",
+    "version": "1.0.0",
+    "description": "Sets a default Click action on a offline user to open a chat window instead opening a new email window",
+    "page_action": {
+        "default_icon": "icon_16.jpg",
+        "default_title": "GMail - Chat by default for offline users"
+    },
+    "permissions": ["tabs"],
+    "incognito": "spanning",
+    "content_security_policy": "script-src 'self'; object-src 'self'",
+    "icons": {
+        "16": "icon_16.jpg",
+        "48": "icon_48.jpg",
+        "128": "icon_128.jpg"
+    },
+    "content_scripts": [{
+        "matches": ["https://mail.google.com/mail/*"],
+        "js": ["gmail.chat.user.js"],
+        "run_at": "document_idle",
+        "all_frames": false
+    }]
+}
